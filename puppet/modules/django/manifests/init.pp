@@ -1,7 +1,5 @@
 #Class: django 
 class django ( $version = "NONE") {
-    require apt
-
      $libmysqlclient = $lsbdistdescription ? {
 	    "Ubuntu 10.04.4 LTS" => "libmysqlclient16",
 		"Ubuntu 11.10"   => "libmysqlclient16",
@@ -9,10 +7,17 @@ class django ( $version = "NONE") {
 		default  => 'none',
 	  }	
     if $version == "NONE" {
-        $cmd = "sudo pip install django",
+        $cmd = "sudo pip install django"
     }
     else {
-        $cmd = "sudo pip install django==$version",
+        $cmd = "sudo pip install django==$version"
+    }
+
+    class {
+    'mysql::server':
+      config_hash => { 'root_password' => 'foo' };
+    'mysql':;
+    'mysql::python':;
     }
 
     package { 
